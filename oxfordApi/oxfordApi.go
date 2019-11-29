@@ -19,37 +19,27 @@ func init() {
 	log.Println("oxfordApi")
 }
 
-func GetDefinition(text string) string {
-	envErr := godotenv.Load()
-	if envErr != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	app_id = os.Getenv("APP_ID")
-	app_key = os.Getenv("APP_KEY")
-
-	word_id = text
-
-	url := fmt.Sprintf("%s/%s/%s/%s", baseUrl, endpoint, language_code, word_id)
-
+func fetchDataByUrl(url string) (*http.Response, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", url, nil)
 	log.Println("err1:", err)
-
 	req.Header.Add("app_id", app_id)
 	req.Header.Add("app_key", app_key)
+
 	resp, err := client.Do(req)
 
 	log.Println("err2:", err)
 	log.Printf("resp: %#v", resp)
+	return resp, err
+}
 
-	// defer resp.Body.Close()
-	// body, err := ioutil.ReadAll(resp.Body)
+func GetDefinition(text string) string {
+	word_id := text
+	url := fmt.Sprintf("%s/%s/%s/%s", baseUrl, endpoint, language_code, word_id)
 
-	// log.Println("body:", string(body))
+	resp, err := fetchDataByUrl(url)
 
 	result := EntriesDef{}
-
 	err = json.NewDecoder(resp.Body).Decode(&result)
 	if err != nil {
 		log.Fatal(err)
