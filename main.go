@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/joho/godotenv"
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
@@ -56,18 +55,10 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-
-	envErr := godotenv.Load()
-	if envErr != nil {
-		log.Fatal("Error loading .env file")
-	}
-
 	ChannelSecret := os.Getenv("CHANNEL_SECRET")
 	ChannelAccessToken := os.Getenv("CHANNEL_ACCESS_TOKEN")
 
-	var err error
-
-	bot, err = linebot.New(ChannelSecret, ChannelAccessToken)
+	bot, err := linebot.New(ChannelSecret, ChannelAccessToken)
 	log.Println("Bot:", bot, " err:", err)
 
 	http.HandleFunc("/", indexPage)

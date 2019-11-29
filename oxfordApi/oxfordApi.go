@@ -6,17 +6,14 @@ import (
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/joho/godotenv"
 )
 
 var baseUrl = "https://od-api.oxforddictionaries.com/api/v2"
 
-var app_id = "<my_app_id>"
-var app_key = "<my_app_key>"
+var app_id = os.Getenv("APP_ID")
+var app_key = os.Getenv("APP_KEY")
 var endpoint = "entries"
 var language_code = "en-us"
-var word_id = "example"
 
 func init() {
 	log.Println("oxfordApi")
