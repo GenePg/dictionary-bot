@@ -1,5 +1,8 @@
 steps:
-- name: 'asia.gcr.io/cloud-builders/docker'
-  args: [ 'build', '-t', 'asia.gcr.io/dictionary-chatbot/dictionary-bot', '.' ]
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', '${_IMAGE}:${_TAG}', '.' ]
 images:
-- 'asia.gcr.io/dictionary-chatbot/dictionary-bot'
+- ${_IMAGE}:${_TAG}
+substitutions:
+  _IMAGE: asia.gcr.io/dictionary-chatbot/dictionary-bot
+  _TAG: dev-v1
