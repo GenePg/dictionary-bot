@@ -7,7 +7,7 @@ steps:
   args: ['push', '${_IMAGE}:${_TAG}']
 # Deploy image to Cloud Run
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ['run', 'deploy', '${_SERVICE_NAME}', '--image', '${_IMAGE}:${_TAG}', '--region', '${_REGION}', '--platform', 'managed', '--allow-unauthenticated']
+  args: ['beta', 'run', 'deploy', '${_SERVICE_NAME}', '--image', '${_IMAGE}:${_TAG}', '--region', '${_REGION}', '--platform', 'managed', '--allow-unauthenticated']
 images:
 - ${_IMAGE}:${_TAG}
 substitutions:
