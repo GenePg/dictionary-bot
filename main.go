@@ -58,7 +58,8 @@ func main() {
 	ChannelSecret := os.Getenv("CHANNEL_SECRET")
 	ChannelAccessToken := os.Getenv("CHANNEL_ACCESS_TOKEN")
 
-	bot, err := linebot.New(ChannelSecret, ChannelAccessToken)
+	var err error
+	bot, err = linebot.New(ChannelSecret, ChannelAccessToken)
 	log.Println("Bot:", bot, " err:", err)
 
 	http.HandleFunc("/", indexPage)
