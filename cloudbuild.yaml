@@ -1,15 +1,26 @@
 steps:
 # Build the container image
-- name: 'gcr.io/cloud-builders/docker'
-  args: [ 'build', '-t', '${_IMAGE}:$COMMIT_SHA', '.' ]
+- id: build-image
+  name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-f', 'Dockerfile', '-t', '${_IMAGE}:$BRANCH_NAME-$SHORT_SHA', '.']
+# Run container
+- id: run-container
+  name: 'gcr.io/cloud-builders/docker'
+  args: ['run', '-p', '80:8000', '-d', '--name', 'bot-server', '${_IMAGE}:$BRANCH_NAME-$SHORT_SHA']
+  waitFor: [build-image]
+# Execute container & Run test
+- id: exec-container
+  name: 'gcr.io/cloud-builders/docker'
+  args: ['exec', 'bot-server', 'go', 'test', './...']
+  waitFor: [run-container]
 # Push the image to Container Registry
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', '${_IMAGE}:$COMMIT_SHA']
+  args: ['push', '${_IMAGE}:$BRANCH_NAME-$SHORT_SHA']
 # Deploy image to Cloud Run
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ['beta', 'run', 'deploy', '${_SERVICE_NAME}', '--image', '${_IMAGE}:$COMMIT_SHA', '--region', '${_REGION}', '--platform', 'managed', '--allow-unauthenticated']
+  args: ['beta', 'run', 'deploy', '${_SERVICE_NAME}', '--image', '${_IMAGE}:$BRANCH_NAME-$SHORT_SHA', '--region', '${_REGION}', '--platform', 'managed', '--allow-unauthenticated']
 images:
-- ${_IMAGE}:$COMMIT_SHA
+- ${_IMAGE}:$BRANCH_NAME-$SHORT_SHA
 substitutions:
   _IMAGE: asia.gcr.io/dictionary-chatbot/dictionary-bot
   _SERVICE_NAME: dictionary-bot

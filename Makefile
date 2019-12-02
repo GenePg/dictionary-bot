@@ -17,7 +17,7 @@ push-image:
 	docker push $(PROD_IMAGE)
 
 cloud-build:
-	gcloud builds submit --tag $(PROD_IMAGE)
+	gcloud builds submit --config cloudbuild.yaml --substitutions="BRANCH_NAME=localTest,SHORT_SHA=1234567"
 
 deploy:
 	gcloud run deploy --image $(PROD_IMAGE) --platform managed
