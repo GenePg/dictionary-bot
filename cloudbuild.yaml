@@ -9,7 +9,7 @@ steps:
 - name: 'gcr.io/cloud-builders/gcloud'
   args: ['beta', 'run', 'deploy', '${_SERVICE_NAME}', '--image', '${_IMAGE}:$COMMIT_SHA', '--region', '${_REGION}', '--platform', 'managed', '--allow-unauthenticated']
 images:
-- ${_IMAGE}:${_TAG}
+- ${_IMAGE}:$COMMIT_SHA
 substitutions:
   _IMAGE: asia.gcr.io/dictionary-chatbot/dictionary-bot
   _SERVICE_NAME: dictionary-bot
