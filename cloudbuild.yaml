@@ -11,7 +11,7 @@ steps:
 images:
 - ${_IMAGE}:${_TAG}
 substitutions:
-  _IMAGE: asia.gcr.io/dictionary-chatbot/dictionary-bot
-  _TAG: dev-v1
+  _IMAGE: asia.gcr.io/$PROJECT_ID/dictionary-bot
+  _TAG: $COMMIT_SHA
   _SERVICE_NAME: dictionary-bot
   _REGION: asia-northeast1
