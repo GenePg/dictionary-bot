@@ -1,17 +1,16 @@
 steps:
 # Build the container image
 - name: 'gcr.io/cloud-builders/docker'
-  args: [ 'build', '-t', '${_IMAGE}:${_TAG}', '.' ]
+  args: [ 'build', '-t', '${_IMAGE}:$COMMIT_SHA', '.' ]
 # Push the image to Container Registry
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', '${_IMAGE}:${_TAG}']
+  args: ['push', '${_IMAGE}:$COMMIT_SHA']
 # Deploy image to Cloud Run
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ['beta', 'run', 'deploy', '${_SERVICE_NAME}', '--image', '${_IMAGE}:${_TAG}', '--region', '${_REGION}', '--platform', 'managed', '--allow-unauthenticated']
+  args: ['beta', 'run', 'deploy', '${_SERVICE_NAME}', '--image', '${_IMAGE}:$COMMIT_SHA', '--region', '${_REGION}', '--platform', 'managed', '--allow-unauthenticated']
 images:
 - ${_IMAGE}:${_TAG}
 substitutions:
-  _IMAGE: asia.gcr.io/$PROJECT_ID/dictionary-bot
-  _TAG: $COMMIT_SHA
+  _IMAGE: asia.gcr.io/dictionary-chatbot/dictionary-bot
   _SERVICE_NAME: dictionary-bot
   _REGION: asia-northeast1
